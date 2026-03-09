@@ -27,7 +27,7 @@ credentials, and vouching for user identities.
 Different implementations of the access manager can co-exist cleanly since all
 changes to metadata go through the metadata service and from there to all access
 manager instances. This interoperability is useful when version upgrades are
-necessary. 
+necessary.
 
 # Compile and Run
 
@@ -35,49 +35,10 @@ To compile and run the Access Manager, you will need at least version 1.25 of go
 and a copy of `etcd`. To rebuild the protobuf definitions, you will need podman.
 
 Given these, you should be able to build the Access Manager using make:
+
 ```shell
 make build
 ```
-Make sure you have the pre-requisites installed as listed below.
-
-```sh
-sudo apt install -y protobuf-compiler
-go get -tool github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway
-go get -tool github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
-go get -tool google.golang.org/protobuf/cmd/protoc-gen-go
-go get -tool google.golang.org/grpc/cmd/protoc-gen-go-grpc
-go install tool
-```
-
-Then generate a key for the server and build all of the key executables
-
-```sh
-ssh-keygen -t rsa -f host.keygen
-for x in cmd/*/*.go
-do
-  go build $x
-  echo $x
-done
-```
-
-This will build the access manager, the metadata server, the credential manager
-and the command line interface and put them into the `cmd` directory.
-
-If you modify any service definitions in the various `*.proto` files, you will
-need to regenerate the associated go code using this command:
-
-```shell
-sh ./scripts/proto-gen.sh
-```
-
-## Trying out your system
-
-To try things out, you need to run the access manager and at least one metadata
-server instance. It helps to run each of these in a separate window so that you
-can separate the log outputs for each one. Each command requires some
-configuration which is simplest to put into environment variables.
-
-## Metadata server
 
 The Access Manager uses `etcd` to store metadata. On MacOS, you can install etcd
 using
@@ -87,7 +48,8 @@ brew install etcd
 ```
 
 See [the etcd page on installation](https://etcd.io/docs/v3.5/install/) for
-other platforms such as Linux.
+other platforms such as Linux. Do not user Linux package managers since they
+typically have very old versions.
 
 For testing and playing around, you can use a single, unsecured instance of
 `etcd`:
@@ -96,7 +58,8 @@ For testing and playing around, you can use a single, unsecured instance of
 etcd
 ```
 
-To remove all metadata, use this command:
+If you want to remove all metadata in order to start with an empty system again,
+use this command:
 
 ```sh
 etcdctl  del --from-key "/" 
@@ -111,17 +74,23 @@ need to secure connections to these instances using client and server
 certificates as described in the `etcd` documentation.
 
 Etcd produces a fair bit of logging output by default so running it in a
-separate window may be preferable.
+separate window may be preferable. That's true for the Access Manager as well.
 
-## Access manager
+## Access Manager signing key
 
-Build the access manager and associated utilities as described above. To start
-the access manager using the default address for client access
-(`http://localhost:8080`) and default address for etcd
-(`http://localhost:2114`) use this
+At this point, you can create a key pair for the Access Manager to sign
+credentials with. Make sure you create this credential with no passphrase.
 
-```sh
-./access-manager &
+```shell
+ssh-keygen -f host.key
+```
+
+## Trying out your system
+
+You now have all you need to run the Access Manager
+
+```shell
+./bin/access-manager
 ```
 
 This program will produce a fair bit of log output so running in a separate
@@ -130,32 +99,123 @@ window may be useful.
 The following environment variables can be used to configure the access manager.
 The defaults should be sufficient for testing and demos.
 
-| Environment | Description |
-Defaults | |---------------------+----------------------------------------+------------------------------------------| |
-LOG_LEVEL | Logging detail level | "info", allowed "debug", "error"         | |
-AM_Port | Access manager port for GRPC access | 4000 | | AM_MetricServerPort |
-Access manager port for metrics | 2114 | | AM_GatewayPort | Access manager port
-for REST over HTTP | 8080 | | AM_MetadataUrls | Hostnames or URLs for
-`etcd`           | localhost | | AM_ServerKey | File containing ssh host key |
-host.key | | - | Port for ssh credential access | 2222 |
+| Environment | Description | Defaults | 
+|------------ | ---------------------------------- | --------------| 
+| LOG_LEVEL | Logging detail level | "info", "debug", "error" |
+| AM_Port | Access manager port for GRPC access | 4000 |
+| AM_MetricServerPort | Access manager port for metrics | 2114 |
+| AM_GatewayPort | Access manager port for REST over HTTP | 8080 |
+| AM_MetadataUrls | Hostnames or URLs for `etcd` | localhost |
+| AM_ServerKey | File containing ssh host key | host.key |
+| - | Port for ssh credential access | 2222 |
 
-## Try it out
+By default, the Access Manager looks for its private key under the name
+`./host.key` and connects to a single instance of `etcd` via
+`localhost`. In a more realistic scenario, you would likely have 3 or 5
+instances of `etcd` and many instances of the Access Manager and they would use
+cryptographic certificates to secure their communication with each other.
 
-You can send some sample commands to the server using the `am` command-line
-utility which was built using the commands above. You will need some environment
-variables to define where the access manager is and what your user path is
+At this point, there is no metadata in the system so the Access Manager is
+pretty useless. To fix that, you can insert the bootstrap metadata
 
-```sh
-export AM_USER=am://user/hpe/bu1/alice
+```shell
+export AM_USER=am://user/the-operator
 export ACCESS_MANAGER_URL=http://localhost:8080
+./bin/am boot bootstrap
 ```
 
-Add some dummy data on metadata server, first erase the content on the metadata
-server and load a bootstrap image
+This should print "Loaded bootstrap" on completion.
+
+You can verify that there is now metadata in the system by running
+
+```shell
+./bin/am ls -r am://
+```
+
+This will produce a recursive enumeration of the entire universe as the Access
+Manager knows about it.
+
+```json
+{
+  "path": "am://",
+  "children": [
+    {
+      "path": "am://data"
+    },
+    {
+      "path": "am://role",
+      "children": [
+        {
+          "path": "am://role/operator-admin"
+        }
+      ]
+    },
+    {
+      "path": "am://user",
+      "children": [
+        {
+          "path": "am://user/the-operator"
+        }
+      ]
+    },
+    {
+      "path": "am://workload"
+    }
+  ]
+}
+```
+
+This universe has a single user `am://user/the-operator` who has a single
+attribute `am://role/operator-admin`.
+
+Note that we ran the ls command claiming to be `the-operator` without any
+evidence that we had the right to do so. That worked because `the-operator` has
+not been configured to use any of the available verification methods. Such an
+identity is known as a demonstration identity and, as the name implies, is only
+useful for demos.
+
+Such a lax setup is handy for demos, but it isn't very interesting. To make
+things one notch more realistic, we can use ssh keys to authenticate
+`the-operator`. In practice, ssh keys are a good backup for critical identities
+in case you have a problem with more elaborate identity systems.
+
+First, install your public key as an annotation on `the-operator`:
+
+```shell
+./bin/am annotate am://user/the-operator ssh-public-key="ssh-rsa ... your key here ..."
+```
+
+After this, you will find that the `ls` command we used before will now fail
+because we can no longer successfully claim to be the `the-operator` without any
+kind of proof.
+
+To get that proof, we can `ssh` to the Access Manager. If everything checks out,
+the Access Manager will return a string containing an Access Manager credential
+which we will use instead of the user URL. We can set this up in a single step:
+
+```shell
+export AM_USER=$(ssh -l am://user/the-operator -p 2222 localhost)
+```
+
+This will give us the necessary credential to act as `the-operator` for a
+limited period of time (configurable, but typically 15 minutes).
+
+## A more elaborate universe
+
+Let's start over with a fancier universe. First erase the content on the
+metadata server and load a sample metadata universe that has a number of users
+divided between different companies.
 
 ```sh
 etcdctl  del --from-key "/" 
 ./am boot new_sample
+```
+
+Set up your identity as Alice who works for HPE:
+
+```sh
+export AM_USER=am://user/hpe/bu1/alice
+export ACCESS_MANAGER_URL=http://localhost:8080
 ```
 
 For demos, the `new_sample` universe is good since it contains a variety of
@@ -266,11 +326,12 @@ exactly which URLs the command is using to get the results it is showing you.
 
 So far, we have played with identities that don't need to be authenticated
 (alice and demo-god). That isn't realistic, of course, and in practice we need
-some way to authenticate users in a more secure way.
+some way to authenticate users in a more secure way. You saw a hint of that
+earlier when setting up `the-operator` with ssh keys.
 
 There are three classes of user authentication in the access manager:
 
-a) use a identity plugin. An identity plugin is just a workload that is allowed
+a) use an identity plugin. An identity plugin is just a workload that is allowed
 to vouch for a particular user. As a result, the plugin can request a signed
 credential for that user. The plugin itself must be authenticated as well which
 is commonly done using the second method.
@@ -297,15 +358,20 @@ to the identity plugin:
 ./am  annotate  am://workload/yoyodyne/id-plugin "ssh-pubkey=$(cat ~/.ssh/id_rsa.pub)"
 ```
 
-At this point, we can get a credential for the id-plugin and write it to a file
-using ssh. At the same time, we can set the `AM_USER` environment variable to
-point to this file.
+At this point, any program that can authenticate itself with the corresponding
+private key will be allowed to get an Access Manager credential for anybody at
+Yoyodyne. To make it easier to see how this works, the `am` command line utility
+has a `vouch` command to allow it to act like an identity plugin. That means
+that if we set the `am` command up with an Access Manager credential for the
+`id-plugin` identity, the `am` can retrieve a credential for any Yoyodyne user.
 
+To do this, we use `ssh` to get the credential for the plugin and pass that 
+to `am` via the `AM_USER` environment variable.
 ```console
-$ ssh -l am://workload/yoyodyne/id-plugin localhost -p 2222  | tee id
+ssh -l am://workload/yoyodyne/id-plugin localhost -p 2222  | tee id
 eyJhbGciOiJFUzI ... crypto stuff deleted ... 1cAeUFSIVT0myen_m7iYMSL7DiTSkuiBR5SYA
 Connection to localhost closed.
-$ export AM_USER=@id
+export AM_USER=@id
 ```
 
 Using this identity for the `id-plugin`, we can get a credential for `bob`
@@ -315,3 +381,8 @@ $ ./am vouch am://user/yoyodyne/bob | tee bob_cred
 eyJhbGciOiJFUzI ... crypto stuff deleted ... fcPvNldb-likO7I1SRiVB3MQg```
 ```
 
+And at this point, we can see the world through Bob's eyes
+```shell
+export AM_USER=@bob_cred
+./am ls am://user  
+```

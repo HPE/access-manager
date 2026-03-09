@@ -28,7 +28,7 @@ then these users cannot be used in demonstration mode, but aside from that
 limitation, individual identities can use multiple forms of identity management
 at the same time.
 
-The demo management is not intended to provide more than a token level of
+Demonstration identities are not intended to provide more than a token level of
 security. Most production uses will primarily use externally managed identities
 with very limited use of internally managed identities.
 
