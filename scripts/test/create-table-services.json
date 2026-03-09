@@ -1,0 +1,18 @@
+{
+    "TableName": "SampleService", 
+    "KeySchema": [
+      { "AttributeName": "ID", "KeyType": "HASH" },
+      { "AttributeName": "Name", "KeyType": "RANGE" }
+
+    ],
+    "AttributeDefinitions": [
+      {"AttributeName":"ID", "AttributeType":"S"},
+      {"AttributeName":"Name", "AttributeType":"S"}
+
+
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    }
+}

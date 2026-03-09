@@ -1,0 +1,116 @@
+/*
+ * SPDX-FileCopyrightText:  Copyright Hewlett Packard Enterprise Development LP
+ */
+
+syntax = "proto3";
+option go_package = "github.com/hpe/access-manager/internal/services/metadata";
+
+package metadata;
+
+import "google/protobuf/any.proto";
+
+// this is the public view of the standard annotations
+message ACE {
+  metadata.Operation op = 1;
+  bool local = 2;           // if true, ACE is not inherited
+  bool agent = 9;           // if true, this ACE is for the agent of the op else it is for the target
+  repeated ACL acls = 3;    // all of these ACLs must be satisfied
+
+  // common fields for all annotations
+  string tag = 4;           // "ace" for all kinds of ACEs
+  int64 unique = 5;         // unique-ifier to avoid collisions for annotations on a metadata node
+  int64 version = 6;        // version for safe updates
+  int64 startMillis = 7;    // what clock time does this ACE take effect
+  int64 endMillis = 8;      // when does this ACE lose effect
+}
+
+message ACL {
+  repeated string roles = 1;
+}
+
+message AppliedRole {
+  string role = 1;
+
+  string tag = 2;
+  int64 unique = 3;
+  int64 version = 4;
+  int64 startMillis = 5;
+  int64 endMillis = 6;
+}
+
+message UserAnnotation {
+  string data = 1;
+
+  string tag = 2;
+  int64 unique = 3;
+  int64 version = 4;
+  int64 startMillis = 5;
+  int64 endMillis = 6;
+}
+
+// And these are the forms that are used for persistence
+// the difference is that things like the unique ID, version
+// and duration are factored out for use by the storage system.
+// Underneath, the annotation-type-specific fields are stored
+// in their stripped form.
+message AnnotationWrapper {
+  int64  Unique = 1;              // unique-ifier to avoid collisions for annotations on a metadata node
+  int64  Version = 2;             // version for safe updates
+  int64  Global = 3;              // the global revision number for last modification
+  int64  StartMillis = 4;         // what clock time did this annotation take effect
+  int64  EndMillis = 5;           // when does this annotation lose effect
+  string Tag = 6;                 // hint for the interpretation of the value such as "role", "ace", or "ssh-key"
+  google.protobuf.Any  Raw = 7;   // any data specific to the annotation goes here in marshalled form
+}
+
+// stores permissions for a single operation
+message ACE_persist {
+  Operation op = 1;                // what operation is controlled
+  bool local = 2;                 // if true, ACE is not inherited
+  repeated ACL_persist acls = 3;   // all of these ACLs must be satisfied
+}
+
+// implements a conventional ACL. User or workload must have at least one of these attributes
+message ACL_persist {
+  repeated string roles = 1;
+}
+
+// the side data for an applied role annotation
+message Role_persist {
+  string path = 1;
+}
+
+// how we store JSON data such as for dataset info
+message Json_persist {
+  string data = 1;
+}
+
+message TaggedString {
+  string tag = 1;
+  string value = 2;
+}
+
+message S3Urls {
+  string tag = 1;
+  string url = 2;
+  string urlWildcard = 3;
+}
+
+// the legal operations
+enum Operation {
+  INVALID = 0;        // place-holder for impossible situations
+  READ = 1;           // ead from a dataset
+  WRITE = 2;          // rite to a dataset, create children of a directory
+  VIEW = 3;           // s an entity visible (could be a dataset, role, user, directory...)
+  ADMIN = 4;          // an permissions on an entity be modified?
+  USEROLE = 5;        // an a role be used in an ACL?
+  APPLYROLE = 6;      // an a role be added to a principal?
+  VOUCHFOR = 7;       // can a plugin vouch for an identity?
+}
+
+// how we store credential signing keys
+message SigningKey {
+  int64 created = 1;  // when was this key created
+  int64 unique = 2;   // bits that identify this key, no relation to the key itself
+  bytes key = 3;      // the key in PKCS1 format
+}

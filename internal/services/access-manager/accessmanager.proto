@@ -1,0 +1,238 @@
+/*
+ * SPDX-FileCopyrightText:  Copyright Hewlett Packard Enterprise Development LP
+ */
+
+syntax = "proto3";
+option go_package = "internal/services/accessmanager";
+
+package accessmanager;
+import "google/api/annotations.proto";
+import "internal/services/metadata/meta.proto";
+
+message GetPrincipalCredentialRequest {
+  string path = 1;
+  string caller_id = 2;
+}
+
+message GetPrincipalCredentialResponse {
+  string credential = 1; // the signed credential
+  Status error = 2;
+}
+
+message CreateObjectRequest {
+  string path = 1;
+  bool asDirectory = 2;
+  string caller_id = 3;
+}
+
+message CreateObjectResponse {
+  int64 version = 1;
+  Status error = 2;
+}
+
+message CreateDirectoryRequest {
+  string path = 1;
+  string caller_id = 2;
+}
+
+message CreateDirectoryResponse {
+  int64 version = 1;
+  Status error = 2;
+}
+
+message DeleteObjectRequest {
+  string path = 1;
+  int64 version = 2;
+  bool recursive = 3;
+  string caller_id = 4;
+}
+
+message DeleteObjectResponse {
+  Status error = 1;
+}
+
+message AnnotateRequest {
+  string path = 1;
+  string annotation = 2;          // json form of the annotation itself
+  string caller_id = 3;
+}
+
+message AnnotateResponse {
+  Status error = 1;
+}
+
+message DeleteAnnotationRequest {
+  string path = 1;
+  string tag = 2;
+  int64 unique = 3;
+  string caller_id = 4;
+}
+
+message DeleteAnnotationResponse {
+  Status error = 1;
+}
+
+message NodeDetails {
+  string path = 1;
+  repeated metadata.AppliedRole roles = 2;
+  repeated metadata.AppliedRole inheritedRoles = 4;
+  repeated metadata.ACE aces = 5;
+  repeated metadata.ACE inheritedAces = 6;
+  repeated metadata.UserAnnotation annotations = 7;
+  bool isDirectory = 8;
+}
+
+message GetDetailsRequest {
+  string path = 1;             // the path. May or may not include am:// prefix
+  bool include_children = 2;   // if true, return details on the children as well
+  string caller_id = 3;        // who is asking?
+}
+
+message GetDetailsResponse {
+  NodeDetails details = 1;
+  repeated string children = 2;
+  Status error = 3;
+}
+
+message GetDatasetCredentialRequest {
+  string path = 1;
+  repeated metadata.Operation operations = 2;
+  string caller_id = 3;
+}
+
+message GetDatasetCredentialResponse {
+  string url = 1;           // a physical location for the credential in device specific format
+  string info = 2;          // a human readable description of the credential
+  string credential = 3;    // the signed credential itself, also device specific format
+  Status error = 4;         // error status
+}
+
+message ValidateCredentialRequest {
+  string credential = 1;    // the credential to validate
+  string caller_id = 2;     // who is asking?
+}
+
+message ValidateCredentialResponse {
+  bool valid = 1;           // true if the credential is valid
+  string info = 2;          // human readable description of the credential
+  Status error = 3;         // error status
+}
+
+message GetSigningKeysRequest {
+  string caller_id = 1; // who is asking?
+}
+
+message GetSigningKeysResponse {
+  map<int64, string> keys = 1; // the signing keys indexed by expiration time
+  Status error = 2; // error status
+}
+
+message Status {
+  int32 error = 3;     // non-zero implies error
+  string message = 4;  // provides some detail about error
+  uint64 global = 5;   // global transaction number
+}
+
+message BoostrapRequest {
+  string boot = 1; // the bootstrap image to load
+  string key = 2;  // the key to use to sign the bootstrap (if not empty)
+}
+
+message BootstrapResponse {
+  Status error = 1;
+}
+
+service AccessManager {
+  rpc Bootstrap(BoostrapRequest) returns (BootstrapResponse) {
+    option (google.api.http) = {
+      post: "/bootstrap"
+    };
+  }
+
+  // Used by an identity plugin to generate a signed credential for a user or workload. The plugin
+  // must have the right to VouchFor the user or workload
+  rpc GetPrincipalCredential(GetPrincipalCredentialRequest) returns (GetPrincipalCredentialResponse) {
+    option (google.api.http) = {
+      get: "/credential"
+    };
+  }
+
+  // Creates an object with the specified name. This object can be data, user, workload, role
+  // or key. Subsequent calls can decorate the object with any required annotations like applied
+  // roles, permissions or special keys. This object will be marked as a leaf, not a directory.
+  rpc CreateObject(CreateObjectRequest) returns (CreateObjectResponse){
+    option (google.api.http) = {
+      post: "/am/{path=**}"
+    };
+  }
+
+  // Creates a directory with the specified name.
+  rpc CreateDirectory(CreateDirectoryRequest) returns (CreateDirectoryResponse);
+
+  // Deletes any object at a specified path. This entails the deletion
+  // of all of the metadata at that path as well and thus is likely
+  // to require quite a number of permissions (UseRole+View on any role in
+  // ACEs, Admin+View on the object). Internally, this function dispatches
+  // to the specialized delete operation for whatever kind of object is
+  // being deleted.
+  // If the path is not an object, but is rather a directory, this operation
+  // will only proceed if that directory has no children unless the recursive
+  // flag is set in the request.
+  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse){
+    option (google.api.http) = {
+      delete: "/am/{path=**}"
+    };
+  }
+
+  // add or update an annotation on an object. If the unique value on the annotation
+  // matches an existing annotation, that annotation is replaced. If the unique value
+  // is novel, the annotation is added.
+  rpc Annotate(AnnotateRequest) returns (AnnotateResponse){
+    option (google.api.http) = {
+      post: "/annotate",
+    };
+  }
+
+  rpc DeleteAnnotation(DeleteAnnotationRequest) returns (DeleteAnnotationResponse){
+    option (google.api.http) = {
+      delete: "/annotate"
+    };
+  }
+
+  // Details for a particular path are returned with all roles,
+  // direct or inherited and all permissions, also direct or
+  // inherited.  Note that roles in the details may be redacted if the
+  // caller does not have sufficient permission to see them. An error
+  // will be returned if the path does not exist or if the caller
+  // does not have view permission for the requested path.
+  rpc GetDetails(GetDetailsRequest) returns (GetDetailsResponse) {
+    option (google.api.http) = {
+      get: "/am/{path=**}"
+      additional_bindings: {
+        get: "/details",
+      }
+    };
+  }
+
+  // Dataset operations
+
+  rpc GetDatasetCredential(GetDatasetCredentialRequest) returns (GetDatasetCredentialResponse){
+    option (google.api.http) = {
+      get: "/datasetcredential"
+    };
+  }
+
+  // credential validation
+  rpc ValidateCredential(ValidateCredentialRequest) returns (ValidateCredentialResponse) {
+    option (google.api.http) = {
+      get: "/validate"
+    };
+  }
+
+  // get the list of all live signing keys
+  rpc GetSigningKeys(GetSigningKeysRequest) returns (GetSigningKeysResponse) {
+    option (google.api.http) = {
+      get: "/signingkeys"
+    };
+  }
+}

@@ -1,0 +1,1737 @@
+{
+  "path": "am://",
+  "meta": [
+    {
+      "tag": "ace",
+      "startMillis": "0",
+      "endMillis": "0",
+      "op": "ADMIN",
+      "unique": "7898498",
+      "local": true,
+      "acls": [
+        {
+          "roles": [
+            "am://role/operator-admin"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "ace",
+      "startMillis": "0",
+      "endMillis": "0",
+      "op": "WRITE",
+      "unique": "7898498",
+      "local": true,
+      "acls": [
+        {
+          "roles": [
+            "am://role/operator-admin"
+          ]
+        }
+      ]
+    }
+  ],
+  "children": [
+    {
+      "path": "am://user",
+      "meta": [
+        {
+          "tag": "ace",
+          "startMillis": "0",
+          "endMillis": "0",
+          "op": "ADMIN",
+          "unique": "7898499",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "ace",
+          "startMillis": "0",
+          "endMillis": "0",
+          "op": "WRITE",
+          "unique": "7898498",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "path": "am://user/the-operator",
+          "meta": [
+            {
+              "tag": "leaf"
+            },
+            {
+              "tag": "applied-role",
+              "role": "am://role/operator-admin"
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "principal"
+            }
+          ],
+          "children": null
+        },
+        {
+          "path": "am://user/demo-god",
+          "meta": [
+            {
+              "tag": "leaf"
+            },
+            {
+              "tag": "applied-role",
+              "role": "am://role/panopticon"
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "principal"
+            }
+          ],
+          "children": null
+        },
+        {
+          "path": "am://user/hpe",
+          "meta": [
+            {
+              "tag": "applied-role",
+              "startMillis": "0",
+              "endMillis": "0",
+              "role": "am://role/hpe/hpe-user"
+            },
+            {
+              "tag": "ace",
+              "startMillis": "0",
+              "endMillis": "0",
+              "op": "ADMIN",
+              "unique": "98637987",
+              "local": true,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/hpe/hpe-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "startMillis": "0",
+              "endMillis": "0",
+              "op": "VIEW",
+              "unique": "79234067",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/hpe/hpe-user",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://user/hpe/bu1",
+              "meta": [
+                {
+                  "tag": "applied-role",
+                  "role": "am://role/hpe/bu1/bu1-user"
+                },
+                {
+                  "tag": "ace",
+                  "op": "WRITE",
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu1/bu1-admin"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "ace",
+                  "op": "ADMIN",
+                  "unique": "3547610",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu1/bu1-admin"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "children": [
+                {
+                  "path": "am://user/hpe/bu1/x",
+                  "meta": null,
+                  "children": [
+                    {
+                      "path": "am://user/hpe/bu1/x/y",
+                      "meta": null,
+                      "children": [
+                        {
+                          "path": "am://user/hpe/bu1/x/y/buried",
+                          "meta": [
+                            {
+                              "tag": "leaf"
+                            },
+                            {
+                              "tag": "principal"
+                            }
+                          ],
+                          "children": null
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "path": "am://user/hpe/bu1/invisible-man",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "applied-role",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "role": "am://role/hpe/bu1/bu1-admin"
+                    },
+                    {
+                      "tag": "ace",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "op": "VIEW",
+                      "unique": "8453087",
+                      "local": false,
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/hpe/bu1/bu1-admin",
+                            "am://role/panopticon"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "principal",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://user/hpe/bu1/bob",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "principal",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://user/hpe/bu1/alice",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "applied-role",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "role": "am://role/hpe/bu1/bu1-admin"
+                    },
+                    {
+                      "tag": "principal",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://user/hpe/bu1/charlie",
+                  "meta": [
+                    {
+                      "tag": "applied-role",
+                      "role": "am://role/hpe/bu1/hpe-special"
+                    },
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "principal"
+                    }
+                  ],
+                  "children": null
+                }
+              ]
+            },
+            {
+              "path": "am://user/hpe/bu2",
+              "meta": [
+                {
+                  "tag": "applied-role",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "role": "am://role/hpe/bu2/bu2-user"
+                }
+              ],
+              "children": [
+                {
+                  "path": "am://user/hpe/bu2/alice",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "applied-role",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "role": "am://role/hpe/bu2/bu2-admin"
+                    },
+                    {
+                      "tag": "principal",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "am://user/yoyodyne",
+          "meta": [
+            {
+              "tag": "applied-role",
+              "role": "am://role/yoyodyne/yoyo-user"
+            },
+            {
+              "tag": "ace",
+              "op": "ADMIN",
+              "local": true,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/yoyo-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/yoyo-user",
+                    "am://role/yoyodyne/id-plugin",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "VOUCHFOR",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/id-plugin"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://user/yoyodyne/alice",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "applied-role",
+                  "role": "am://role/yoyodyne/yoyo-admin"
+                },
+                {
+                  "tag": "principal"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://user/yoyodyne/bob",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "principal"
+                },
+                {
+                  "tag": "applied-role",
+                  "role": "am://role/yoyodyne/daos/raw"
+                },
+                {
+                  "tag": "applied-role",
+                  "role": "am://role/yoyodyne/daos/ref"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://user/yoyodyne/charlie",
+              "meta": [
+                {
+                  "tag": "applied-role",
+                  "role": "am://role/yoyodyne/yoyo-special"
+                },
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "principal"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://user/yoyodyne/david",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "principal"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://user/yoyodyne/eve",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "principal"
+                }
+              ],
+              "children": null
+            }
+          ]
+        },
+        {
+          "path": "am://user/small",
+          "meta": [
+            {
+              "tag": "ace",
+              "op": "ADMIN",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://user/small/a",
+              "meta": [],
+              "children": [
+                {
+                  "path": "am://user/small/a/x1",
+                  "meta": [
+                    {
+                      "tag": "ace",
+                      "op": "READ",
+                      "local": false,
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/operator-admin"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "children": [
+                    {
+                      "path": "am://user/small/a/x1/y1",
+                      "meta": [
+                        {
+                          "tag": "leaf"
+                        },
+                        {
+                          "tag": "principal"
+                        },
+                        {
+                          "tag": "applied-role",
+                          "role": "am://role/hpe/bu1/bu1-user"
+                        }
+                      ],
+                      "children": []
+                    },
+                    {
+                      "path": "am://user/small/a/x1/y2",
+                      "meta": [
+                        {
+                          "tag": "leaf"
+                        },
+                        {
+                          "tag": "principal"
+                        }
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "path": "am://user/small/a/x2",
+                  "meta": null,
+                  "children": [
+                    {
+                      "path": "am://user/small/a/x2/y1",
+                      "meta": [
+                        {
+                          "tag": "leaf"
+                        },
+                        {
+                          "tag": "principal"
+                        }
+                      ],
+                      "children": []
+                    },
+                    {
+                      "path": "am://user/small/a/x2/y2",
+                      "meta": [
+                        {
+                          "tag": "leaf"
+                        },
+                        {
+                          "tag": "principal"
+                        }
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "path": "am://user/small/a/x3",
+                  "meta": null,
+                  "children": [
+                    {
+                      "path": "am://user/small/a/x3/y1",
+                      "meta": [
+                        {
+                          "tag": "leaf"
+                        },
+                        {
+                          "tag": "principal"
+                        }
+                      ],
+                      "children": []
+                    },
+                    {
+                      "path": "am://user/small/a/x3/y2",
+                      "meta": [
+                        {
+                          "tag": "leaf"
+                        },
+                        {
+                          "tag": "principal"
+                        }
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "am://data",
+      "meta": [
+        {
+          "tag": "ace",
+          "startMillis": "0",
+          "endMillis": "0",
+          "op": "ADMIN",
+          "unique": "78097093",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "ace",
+          "startMillis": "0",
+          "endMillis": "0",
+          "op": "WRITE",
+          "unique": "788498",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "path": "am://data/yoyodyne",
+          "meta": [
+            {
+              "tag": "ace",
+              "op": "ADMIN",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/yoyo-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "WRITE",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/yoyo-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/yoyo-user",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://data/yoyodyne/daos1",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "data"
+                },
+                {
+                  "tag": "ace",
+                  "op": "READ",
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/yoyodyne/daos/raw",
+                        "am://role/yoyodyne/daos/ref",
+                        "am://role/yoyodyne/daos/std"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "ace",
+                  "op": "WRITE",
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/yoyodyne/daos/raw",
+                        "am://role/yoyodyne/daos/ref",
+                        "am://role/yoyodyne/daos/std"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "data-info",
+                  "data": "{\"delegatedAttributes\": [\"am://role/yoyodyne/daos/raw\", \"am://role/yoyodyne/daos/ref\", \"am://role/yoyodyne/daos/std\"]}"
+                }
+              ],
+              "children": null
+            }
+          ]
+        },
+        {
+          "path": "am://data/hpe",
+          "meta": [
+            {
+              "tag": "ace",
+              "startMillis": "0",
+              "endMillis": "0",
+              "op": "ADMIN",
+              "unique": "5687348",
+              "local": true,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/hpe/hpe-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "startMillis": "0",
+              "endMillis": "0",
+              "op": "VIEW",
+              "unique": "2934087",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/hpe/hpe-user",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://data/hpe/pig",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "data"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://data/hpe/bu1",
+              "meta": [
+                {
+                  "tag": "ace",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "op": "ADMIN",
+                  "unique": "3418765",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu1/bu1-admin"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "ace",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "op": "VIEW",
+                  "unique": "394843557",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu1/bu1-user",
+                        "am://role/panopticon"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "children": [
+                {
+                  "path": "am://data/hpe/bu1/hot-data",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "ace",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "op": "WRITE",
+                      "unique": "785683",
+                      "local": false,
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/hpe/bu1/bu1-aggregator"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "ace",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "op": "READ",
+                      "unique": "673547",
+                      "local": false,
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/hpe/bu1/bu1-query"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "data"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://data/hpe/bu1/raw-data",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "ace",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "op": "WRITE",
+                      "unique": "687399",
+                      "local": false,
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/hpe/bu1/bu1-ingest"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "ace",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "op": "READ",
+                      "unique": "9504678",
+                      "local": false,
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/hpe/bu1/bu1-aggregator"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "data"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://data/hpe/bu1/special",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "data"
+                    }
+                  ],
+                  "children": null
+                }
+              ]
+            },
+            {
+              "path": "am://data/hpe/foo",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "data"
+                }
+              ],
+              "children": null
+            }
+          ]
+        },
+        {
+          "path": "am://data/dir",
+          "meta": null,
+          "children": [
+            {
+              "path": "am://data/dir/bar",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "data"
+                }
+              ],
+              "children": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "am://role",
+      "meta": [
+        {
+          "tag": "ace",
+          "startMillis": "0",
+          "endMillis": "0",
+          "op": "ADMIN",
+          "unique": "234897569",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "ace",
+          "startMillis": "0",
+          "endMillis": "0",
+          "op": "WRITE",
+          "unique": "7898498",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "path": "am://role/yoyodyne",
+          "meta": [
+            {
+              "tag": "ace",
+              "op": "ADMIN",
+              "local": true,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/yoyo-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/yoyo-user",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://role/yoyodyne/yoyo-user",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "role"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://role/yoyodyne/yoyo-admin",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "role"
+                },
+                {
+                  "tag": "ace",
+                  "op": "VIEW",
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/yoyodyne/yoyo-admin",
+                        "am://role/panopticon"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://role/yoyodyne/id-plugin",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "role"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://role/yoyodyne/daos",
+              "meta": [],
+              "children": [
+                {
+                  "path": "am://role/yoyodyne/daos/raw",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/yoyodyne/daos/ref",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/yoyodyne/daos/std",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role"
+                    }
+                  ],
+                  "children": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "am://role/hpe",
+          "meta": [
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/hpe/hpe-user",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "startMillis": "0",
+              "endMillis": "0",
+              "op": "ADMIN",
+              "unique": "68934334",
+              "local": true,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/hpe/hpe-admin"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://role/hpe/bu1",
+              "meta": [
+                {
+                  "tag": "ace",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "op": "ADMIN",
+                  "unique": "64234897",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu1/bu1-admin"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "ace",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "op": "APPLYROLE",
+                  "unique": "3948584",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu1/bu1-admin"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "ace",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "op": "USEROLE",
+                  "unique": "467340",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu1/bu1-admin"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "children": [
+                {
+                  "path": "am://role/hpe/bu1/hpe-special",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role"
+                    },
+                    {
+                      "op": "VIEW",
+                      "tag": "ace",
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/hpe/hpe-user",
+                            "am://role/panopticon"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/hpe/bu1/bu1-aggregator",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/hpe/bu1/bu1-query",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/hpe/bu1/bu1-workload",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/hpe/bu1/bu1-ingest",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/hpe/bu1/bu1-user",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/hpe/bu1/bu1-admin",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    },
+                    {
+                      "tag": "ace",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "op": "VIEW",
+                      "unique": "4098740",
+                      "local": false,
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/hpe/bu1/bu1-admin",
+                            "am://role/panopticon"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "children": null
+                }
+              ]
+            },
+            {
+              "path": "am://role/hpe/bu2",
+              "meta": [
+                {
+                  "tag": "ace",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "op": "VIEW",
+                  "unique": "914587",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/hpe-user",
+                        "am://role/panopticon"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "ace",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "op": "ADMIN",
+                  "unique": "134958",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu2/bu2-admin"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "ace",
+                  "op": "APPLYROLE",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu2/bu2-admin"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "ace",
+                  "op": "USEROLE",
+                  "local": false,
+                  "acls": [
+                    {
+                      "roles": [
+                        "am://role/hpe/bu2/bu2-admin"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "children": [
+                {
+                  "path": "am://role/hpe/bu2/bu2-admin",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role"
+                    },
+                    {
+                      "tag": "ace",
+                      "op": "VIEW",
+                      "acls": [
+                        {
+                          "roles": [
+                            "am://role/hpe/bu2/bu2-admin",
+                            "am://role/panopticon"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://role/hpe/bu2/bu2-user",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "role"
+                    }
+                  ],
+                  "children": null
+                }
+              ]
+            },
+            {
+              "path": "am://role/hpe/hpe-user",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "role"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://role/hpe/hpe-workload",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "role",
+                  "startMillis": "0",
+                  "endMillis": "0"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://role/hpe/hpe-admin",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "role",
+                  "startMillis": "0",
+                  "endMillis": "0"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://role/hpe/id-plugin",
+              "meta": [
+                {
+                  "tag": "leaf"
+                },
+                {
+                  "tag": "role"
+                }
+              ],
+              "children": null
+            }
+          ]
+        },
+        {
+          "path": "am://role/operator-admin",
+          "meta": [
+            {
+              "tag": "leaf"
+            },
+            {
+              "tag": "role"
+            },
+            {
+              "tag": "ace",
+              "op": "ADMIN",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "WRITE",
+              "local": true,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": null
+        },
+        {
+          "path": "am://role/panopticon",
+          "meta": [
+            {
+              "tag": "leaf"
+            },
+            {
+              "tag": "role"
+            },
+            {
+              "tag": "ace",
+              "op": "ADMIN",
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "WRITE",
+              "local": true,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": null
+        }
+      ]
+    },
+    {
+      "path": "am://workload",
+      "meta": [
+        {
+          "tag": "ace",
+          "op": "ADMIN",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "ace",
+          "startMillis": "0",
+          "endMillis": "0",
+          "op": "WRITE",
+          "unique": "7898498",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "path": "am://workload/yoyodyne",
+          "meta": [
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/yoyodyne/yoyo-user",
+                    "am://role/yoyodyne/id-plugin",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://workload/yoyodyne/id-plugin",
+              "meta": [
+                {
+                  "tag": "applied-role",
+                  "role": "am://role/yoyodyne/id-plugin"
+                }
+              ],
+              "children": null
+            }
+          ]
+        },
+        {
+          "path": "am://workload/hpe",
+          "meta": [
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/hpe/hpe-user",
+                    "am://role/hpe/id-plugin",
+                    "am://role/panopticon"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "path": "am://workload/hpe/id-plugin",
+              "meta": [
+                {
+                  "tag": "applied-role",
+                  "role": "am://role/hpe/id-plugin"
+                }
+              ],
+              "children": null
+            },
+            {
+              "path": "am://workload/hpe/bu1",
+              "meta": [
+                {
+                  "tag": "applied-role",
+                  "startMillis": "0",
+                  "endMillis": "0",
+                  "role": "am://role/hpe/bu1/bu1-workload"
+                }
+              ],
+              "children": [
+                {
+                  "path": "am://workload/hpe/bu1/monthly-summary",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "applied-role",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "role": "am://role/hpe/bu1/bu1-aggregator"
+                    },
+                    {
+                      "tag": "applied-role",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "role": "am://role/hpe/bu1/bu1-query"
+                    },
+                    {
+                      "tag": "principal",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://workload/hpe/bu1/ingester",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "applied-role",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "role": "am://role/hpe/bu1/bu1-ingest"
+                    },
+                    {
+                      "tag": "principal",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                },
+                {
+                  "path": "am://workload/hpe/bu1/dashboard",
+                  "meta": [
+                    {
+                      "tag": "leaf"
+                    },
+                    {
+                      "tag": "applied-role",
+                      "startMillis": "0",
+                      "endMillis": "0",
+                      "role": "am://role/hpe/bu1/bu1-query"
+                    },
+                    {
+                      "tag": "principal",
+                      "version": "5",
+                      "startMillis": "0",
+                      "endMillis": "0"
+                    }
+                  ],
+                  "children": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

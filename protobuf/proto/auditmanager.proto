@@ -1,0 +1,62 @@
+/*
+ * SPDX-FileCopyrightText:  Copyright Hewlett Packard Enterprise Development LP
+ */
+
+syntax = "proto3";
+option go_package = "./am-proto";
+
+package accessmanager;
+
+import "metadata/meta.proto";
+import "access-manager/accessmanager.proto";
+
+message HistoricalPermissionsInfo {
+  repeated string principals = 1;
+  repeated metadata.Operation operations = 2;
+  repeated string entities = 3;
+  uint64 startTime = 4;
+  uint64 endTime = 5;
+  string caller_id = 6;
+}
+
+message HistoricalPermissionsRequest {
+  repeated string principals = 1; //user or workload as Subject
+  repeated metadata.Operation operations = 2; // Verb
+  repeated string entities = 3; // role, data as Object
+  uint64 startTime = 4;
+  uint64 endTime = 5;
+  string caller_id = 6;
+}
+
+message HistoricalPermissionsResponse {
+  repeated Logs log = 1;
+  Status error = 2;
+}
+
+message Logs {
+  string principal = 1;
+  string object = 2;
+  metadata.Operation operation = 3;
+  uint64 start = 4;
+  uint64 end = 5;
+}
+
+message AccessLogRequest {
+  string principals = 1;
+  repeated metadata.Operation operations = 2;
+  string dataset = 3;
+  int64 global = 4;
+  uint64 requested_at = 5;
+  uint64 expired_at = 6;
+}
+
+message AccessLogResponse {
+  uint64 id = 1;
+  Status error = 2;
+}
+
+service AuditQueryManager {
+  rpc GetHistoricalPermissions(HistoricalPermissionsRequest) returns (HistoricalPermissionsResponse);
+  rpc AddAccessLog(AccessLogRequest) returns (AccessLogResponse);
+  rpc GetAccessLogs(HistoricalPermissionsInfo) returns (HistoricalPermissionsResponse);
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - SPDX-FileCopyrightText:  Copyright Hewlett Packard Enterprise Development LP
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+     viewBox="475.5 177.32812 86.77344 115.17188" width="86.77344" height="115.17188">
+  <defs>
+    <clipPath id="artboard_clip_path">
+      <path d="M 475.5 177.32812 L 562.27344 177.32812 L 562.27344 292.5 L 475.5 292.5 Z"/>
+    </clipPath>
+  </defs>
+  <g id="Canvas_1" fill="none" stroke="none" stroke-dasharray="none" fill-opacity="1" stroke-opacity="1">
+    <title>Canvas 1</title>
+    <g id="Canvas_1_Layer_1" clip-path="url(#artboard_clip_path)">
+      <title>Layer 1</title>
+      <g id="Graphic_7">
+        <rect x="479" y="199" width="64" height="90" fill="white"/>
+        <rect x="479" y="199" width="64" height="90" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Graphic_8">
+        <rect x="494.77344" y="180.82812" width="64" height="90" fill="white"/>
+        <rect x="494.77344" y="180.82812" width="64" height="90" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_9">
+        <line x1="508.77344" y1="202" x2="544.77344" y2="202" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_11">
+        <line x1="508.77344" y1="225.32812" x2="544.77344" y2="225.32812" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_13">
+        <line x1="508.77344" y1="248.75" x2="544.77344" y2="248.75" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+    </g>
+  </g>
+</svg>

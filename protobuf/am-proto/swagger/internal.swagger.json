@@ -1,0 +1,323 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "internal.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Metadata"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "ACE": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "$ref": "#/definitions/Operation"
+        },
+        "unique": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "local": {
+          "type": "boolean"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ACL"
+          }
+        }
+      }
+    },
+    "ACL": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Operation": {
+      "type": "string",
+      "enum": [
+        "READ",
+        "WRITE",
+        "VIEW",
+        "ADMIN",
+        "USEROLE",
+        "APPLYROLE",
+        "INVALID"
+      ],
+      "default": "READ",
+      "title": "- READ: read from a dataset\n - WRITE: write to a dataset\n - VIEW: is an entity visible (could be a dataset or role)\n - ADMIN: can permissions on an entity be modified?\n - USEROLE: can a role be used in an ACL?\n - APPLYROLE: can a role be added to a principal?\n - INVALID: place-holder for impossible situations"
+    },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "integer",
+          "format": "int32",
+          "title": "non-zero implies error"
+        },
+        "message": {
+          "type": "string",
+          "title": "provides some detail about error"
+        },
+        "global": {
+          "type": "string",
+          "format": "uint64",
+          "title": "global transaction number"
+        }
+      }
+    },
+    "accessmanagerCacheUpdate": {
+      "type": "object",
+      "properties": {
+        "global": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "time": {
+          "type": "string",
+          "format": "int64"
+        },
+        "version": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "principal": {
+          "$ref": "#/definitions/accessmanagerPrincipalInfo"
+        },
+        "dataset": {
+          "$ref": "#/definitions/accessmanagerDatasetInfo"
+        },
+        "role": {
+          "$ref": "#/definitions/accessmanagerRoleInfo"
+        },
+        "permission": {
+          "$ref": "#/definitions/accessmanagerPermissionInfo"
+        },
+        "delete": {
+          "$ref": "#/definitions/accessmanagerDeleteObjectRequest"
+        },
+        "tick": {
+          "$ref": "#/definitions/accessmanagerTickMessage"
+        }
+      },
+      "title": "a single metadata update"
+    },
+    "accessmanagerDatasetInfo": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "global": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "startMillis": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "endMillis": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "uri": {
+          "type": "string"
+        },
+        "urlWildcard": {
+          "type": "string"
+        }
+      }
+    },
+    "accessmanagerDeleteObjectRequest": {
+      "type": "object",
+      "properties": {
+        "uri": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "accessmanagerPermissionInfo": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "global": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "startMillis": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "endMillis": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ACE"
+          }
+        }
+      }
+    },
+    "accessmanagerPrincipalInfo": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "global": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "startMillis": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "endMillis": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "spiffeId": {
+          "type": "string"
+        }
+      }
+    },
+    "accessmanagerRoleInfo": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "global": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "startMillis": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "endMillis": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "accessmanagerTickMessage": {
+      "type": "object",
+      "properties": {
+        "serverTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "time according to the server in µs since January 1, 1970 UTC. Used to estimate propagation delay"
+        }
+      },
+      "description": "*\nTicks are sent from the metadata server to allow clients to verify that their subscription\nis still alive. If they don't arrive in a timely fashion, the subscription should be canceled\nand restarted. That could happen, for instance, if a metadata server is deactivated."
+    },
+    "accessmanagerUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "s": {
+          "$ref": "#/definitions/Status"
+        },
+        "update": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/accessmanagerCacheUpdate"
+          }
+        },
+        "isComplete": {
+          "type": "boolean"
+        }
+      },
+      "title": "a batch of metadata updates. Batch size is up to the server\nand is chosen to amortize the cost of sending a transaction\nif needed"
+    },
+    "accessmanagerVersionResponse": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "s": {
+          "$ref": "#/definitions/Status"
+        }
+      }
+    },
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    }
+  }
+}

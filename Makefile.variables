@@ -1,0 +1,11 @@
+export PROJECT = access-manager
+IMPORT_PATH := ${PROJECT}
+
+# all non-windows environments
+ROOT := $(shell pwd)
+
+DEV_IMAGE := ${PROJECT}
+
+DOCKRUN := podman run --rm \
+	-v ${ROOT}:/... \
+	${DEV_IMAGE}

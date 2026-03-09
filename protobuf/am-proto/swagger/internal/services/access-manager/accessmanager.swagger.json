@@ -1,0 +1,853 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "internal/services/access-manager/accessmanager.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AccessManager"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/am/{path}": {
+      "get": {
+        "summary": "Details for a particular path are returned with all roles,\ndirect or inherited and all permissions, also direct or\ninherited.  Note that roles in the details may be redacted if the\ncaller does not have sufficient permission to see them. An error\nwill be returned if the path does not exist or if the caller\ndoes not have view permission for the requested path.",
+        "operationId": "AccessManager_GetDetails",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerGetDetailsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "the path. May or may not include am:// prefix",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".+"
+          },
+          {
+            "name": "includeChildren",
+            "description": "if true, return details on the children as well",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "callerId",
+            "description": "who is asking?",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      },
+      "delete": {
+        "summary": "Deletes any object at a specified path. This entails the deletion\nof all of the metadata at that path as well and thus is likely\nto require quite a number of permissions (UseRole+View on any role in\nACEs, Admin+View on the object). Internally, this function dispatches\nto the specialized delete operation for whatever kind of object is\nbeing deleted.\nIf the path is not an object, but is rather a directory, this operation\nwill only proceed if that directory has no children unless the recursive\nflag is set in the request.",
+        "operationId": "AccessManager_DeleteObject",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerDeleteObjectResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".+"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "recursive",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      },
+      "post": {
+        "summary": "Creates an object with the specified name. This object can be data, user, workload, role\nor key. Subsequent calls can decorate the object with any required annotations like applied\nroles, permissions or special keys. This object will be marked as a leaf, not a directory.",
+        "operationId": "AccessManager_CreateObject",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerCreateObjectResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".+"
+          },
+          {
+            "name": "asDirectory",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      }
+    },
+    "/annotate": {
+      "delete": {
+        "operationId": "AccessManager_DeleteAnnotation",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerDeleteAnnotationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "unique",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      },
+      "post": {
+        "summary": "add or update an annotation on an object. If the unique value on the annotation\nmatches an existing annotation, that annotation is replaced. If the unique value\nis novel, the annotation is added.",
+        "operationId": "AccessManager_Annotate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerAnnotateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "annotation",
+            "description": "json form of the annotation itself",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      }
+    },
+    "/bootstrap": {
+      "post": {
+        "operationId": "AccessManager_Bootstrap",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerBootstrapResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "boot",
+            "description": "the bootstrap image to load",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "description": "the key to use to sign the bootstrap (if not empty)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      }
+    },
+    "/credential": {
+      "get": {
+        "summary": "Used by an identity plugin to generate a signed credential for a user or workload. The plugin\nmust have the right to VouchFor the user or workload",
+        "operationId": "AccessManager_GetPrincipalCredential",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerGetPrincipalCredentialResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      }
+    },
+    "/datasetcredential": {
+      "get": {
+        "operationId": "AccessManager_GetDatasetCredential",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerGetDatasetCredentialResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "operations",
+            "description": " - INVALID: place-holder for impossible situations\n - READ: ead from a dataset\n - WRITE: rite to a dataset, create children of a directory\n - VIEW: s an entity visible (could be a dataset, role, user, directory...)\n - ADMIN: an permissions on an entity be modified?\n - USEROLE: an a role be used in an ACL?\n - APPLYROLE: an a role be added to a principal?\n - VOUCHFOR: can a plugin vouch for an identity?",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "INVALID",
+                "READ",
+                "WRITE",
+                "VIEW",
+                "ADMIN",
+                "USEROLE",
+                "APPLYROLE",
+                "VOUCHFOR"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      }
+    },
+    "/details": {
+      "get": {
+        "summary": "Details for a particular path are returned with all roles,\ndirect or inherited and all permissions, also direct or\ninherited.  Note that roles in the details may be redacted if the\ncaller does not have sufficient permission to see them. An error\nwill be returned if the path does not exist or if the caller\ndoes not have view permission for the requested path.",
+        "operationId": "AccessManager_GetDetails2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerGetDetailsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "the path. May or may not include am:// prefix",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "includeChildren",
+            "description": "if true, return details on the children as well",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "callerId",
+            "description": "who is asking?",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      }
+    },
+    "/signingkeys": {
+      "get": {
+        "summary": "get the list of all live signing keys",
+        "operationId": "AccessManager_GetSigningKeys",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerGetSigningKeysResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "callerId",
+            "description": "who is asking?",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      }
+    },
+    "/validate": {
+      "get": {
+        "summary": "credential validation",
+        "operationId": "AccessManager_ValidateCredential",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accessmanagerValidateCredentialResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googleRpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "credential",
+            "description": "the credential to validate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "callerId",
+            "description": "who is asking?",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AccessManager"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "accessmanagerAnnotateResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus"
+        }
+      }
+    },
+    "accessmanagerBootstrapResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus"
+        }
+      }
+    },
+    "accessmanagerCreateObjectResponse": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "format": "int64"
+        },
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus"
+        }
+      }
+    },
+    "accessmanagerDeleteAnnotationResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus"
+        }
+      }
+    },
+    "accessmanagerDeleteObjectResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus"
+        }
+      }
+    },
+    "accessmanagerGetDatasetCredentialResponse": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "a physical location for the credential in device specific format"
+        },
+        "info": {
+          "type": "string",
+          "title": "a human readable description of the credential"
+        },
+        "credential": {
+          "type": "string",
+          "title": "the signed credential itself, also device specific format"
+        },
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus",
+          "title": "error status"
+        }
+      }
+    },
+    "accessmanagerGetDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "details": {
+          "$ref": "#/definitions/accessmanagerNodeDetails"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus"
+        }
+      }
+    },
+    "accessmanagerGetPrincipalCredentialResponse": {
+      "type": "object",
+      "properties": {
+        "credential": {
+          "type": "string",
+          "title": "the signed credential"
+        },
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus"
+        }
+      }
+    },
+    "accessmanagerGetSigningKeysResponse": {
+      "type": "object",
+      "properties": {
+        "keys": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "the signing keys indexed by expiration time"
+        },
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus",
+          "title": "error status"
+        }
+      }
+    },
+    "accessmanagerNodeDetails": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/metadataAppliedRole"
+          }
+        },
+        "inheritedRoles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/metadataAppliedRole"
+          }
+        },
+        "aces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/metadataACE"
+          }
+        },
+        "inheritedAces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/metadataACE"
+          }
+        },
+        "annotations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/metadataUserAnnotation"
+          }
+        },
+        "isDirectory": {
+          "type": "boolean"
+        }
+      }
+    },
+    "accessmanagerStatus": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "integer",
+          "format": "int32",
+          "title": "non-zero implies error"
+        },
+        "message": {
+          "type": "string",
+          "title": "provides some detail about error"
+        },
+        "global": {
+          "type": "string",
+          "format": "uint64",
+          "title": "global transaction number"
+        }
+      }
+    },
+    "accessmanagerValidateCredentialResponse": {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "title": "true if the credential is valid"
+        },
+        "info": {
+          "type": "string",
+          "title": "human readable description of the credential"
+        },
+        "error": {
+          "$ref": "#/definitions/accessmanagerStatus",
+          "title": "error status"
+        }
+      }
+    },
+    "googleRpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "metadataACE": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "$ref": "#/definitions/metadataOperation"
+        },
+        "local": {
+          "type": "boolean",
+          "title": "if true, ACE is not inherited"
+        },
+        "agent": {
+          "type": "boolean",
+          "title": "if true, this ACE is for the agent of the op else it is for the target"
+        },
+        "acls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/metadataACL"
+          },
+          "title": "all of these ACLs must be satisfied"
+        },
+        "tag": {
+          "type": "string",
+          "description": "\"ace\" for all kinds of ACEs",
+          "title": "common fields for all annotations"
+        },
+        "unique": {
+          "type": "string",
+          "format": "int64",
+          "title": "unique-ifier to avoid collisions for annotations on a metadata node"
+        },
+        "version": {
+          "type": "string",
+          "format": "int64",
+          "title": "version for safe updates"
+        },
+        "startMillis": {
+          "type": "string",
+          "format": "int64",
+          "title": "what clock time does this ACE take effect"
+        },
+        "endMillis": {
+          "type": "string",
+          "format": "int64",
+          "title": "when does this ACE lose effect"
+        }
+      },
+      "title": "this is the public view of the standard annotations"
+    },
+    "metadataACL": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "metadataAppliedRole": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "unique": {
+          "type": "string",
+          "format": "int64"
+        },
+        "version": {
+          "type": "string",
+          "format": "int64"
+        },
+        "startMillis": {
+          "type": "string",
+          "format": "int64"
+        },
+        "endMillis": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "metadataOperation": {
+      "type": "string",
+      "enum": [
+        "INVALID",
+        "READ",
+        "WRITE",
+        "VIEW",
+        "ADMIN",
+        "USEROLE",
+        "APPLYROLE",
+        "VOUCHFOR"
+      ],
+      "default": "INVALID",
+      "description": "- INVALID: place-holder for impossible situations\n - READ: ead from a dataset\n - WRITE: rite to a dataset, create children of a directory\n - VIEW: s an entity visible (could be a dataset, role, user, directory...)\n - ADMIN: an permissions on an entity be modified?\n - USEROLE: an a role be used in an ACL?\n - APPLYROLE: an a role be added to a principal?\n - VOUCHFOR: can a plugin vouch for an identity?",
+      "title": "the legal operations"
+    },
+    "metadataUserAnnotation": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "unique": {
+          "type": "string",
+          "format": "int64"
+        },
+        "version": {
+          "type": "string",
+          "format": "int64"
+        },
+        "startMillis": {
+          "type": "string",
+          "format": "int64"
+        },
+        "endMillis": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "A URL/resource name that uniquely identifies the type of the serialized\nprotocol buffer message. This string must contain at least\none \"/\" character. The last segment of the URL's path must represent\nthe fully qualified name of the type (as in\n`path/google.protobuf.Duration`). The name should be in a canonical form\n(e.g., leading \".\" is not accepted).\n\nIn practice, teams usually precompile into the binary all types that they\nexpect it to use in the context of Any. However, for URLs which use the\nscheme `http`, `https`, or no scheme, one can optionally set up a type\nserver that maps type URLs to message definitions as follows:\n\n* If no scheme is provided, `https` is assumed.\n* An HTTP GET on the URL must yield a [google.protobuf.Type][]\n  value in binary format, or produce an error.\n* Applications are allowed to cache lookup results based on the\n  URL, or have them precompiled into a binary to avoid any\n  lookup. Therefore, binary compatibility needs to be preserved\n  on changes to types. (Use versioned type names to manage\n  breaking changes.)\n\nNote: this functionality is not currently available in the official\nprotobuf release, and it is not used for type URLs beginning with\ntype.googleapis.com. As of May 2023, there are no widely used type server\nimplementations and no plans to implement one.\n\nSchemes other than `http`, `https` (or the empty scheme) might be\nused with implementation specific semantics."
+        }
+      },
+      "additionalProperties": {},
+      "description": "`Any` contains an arbitrary serialized protocol buffer message along with a\nURL that describes the type of the serialized message.\n\nProtobuf library provides support to pack/unpack Any values in the form\nof utility functions or additional generated methods of the Any type.\n\nExample 1: Pack and unpack a message in C++.\n\n    Foo foo = ...;\n    Any any;\n    any.PackFrom(foo);\n    ...\n    if (any.UnpackTo(\u0026foo)) {\n      ...\n    }\n\nExample 2: Pack and unpack a message in Java.\n\n    Foo foo = ...;\n    Any any = Any.pack(foo);\n    ...\n    if (any.is(Foo.class)) {\n      foo = any.unpack(Foo.class);\n    }\n    // or ...\n    if (any.isSameTypeAs(Foo.getDefaultInstance())) {\n      foo = any.unpack(Foo.getDefaultInstance());\n    }\n\n Example 3: Pack and unpack a message in Python.\n\n    foo = Foo(...)\n    any = Any()\n    any.Pack(foo)\n    ...\n    if any.Is(Foo.DESCRIPTOR):\n      any.Unpack(foo)\n      ...\n\n Example 4: Pack and unpack a message in Go\n\n     foo := \u0026pb.Foo{...}\n     any, err := anypb.New(foo)\n     if err != nil {\n       ...\n     }\n     ...\n     foo := \u0026pb.Foo{}\n     if err := any.UnmarshalTo(foo); err != nil {\n       ...\n     }\n\nThe pack methods provided by protobuf library will by default use\n'type.googleapis.com/full.type.name' as the type URL and the unpack\nmethods only use the fully qualified type name after the last '/'\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\nname \"y.z\".\n\nJSON\n====\nThe JSON representation of an `Any` value uses the regular\nrepresentation of the deserialized, embedded message, with an\nadditional field `@type` which contains the type URL. Example:\n\n    package google.profile;\n    message Person {\n      string first_name = 1;\n      string last_name = 2;\n    }\n\n    {\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\n      \"firstName\": \u003cstring\u003e,\n      \"lastName\": \u003cstring\u003e\n    }\n\nIf the embedded message type is well-known and has a custom JSON\nrepresentation, that representation will be embedded adding a field\n`value` which holds the custom JSON in addition to the `@type`\nfield. Example (for message [google.protobuf.Duration][]):\n\n    {\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\n      \"value\": \"1.212s\"\n    }"
+    }
+  }
+}

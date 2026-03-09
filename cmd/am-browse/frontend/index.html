@@ -1,0 +1,588 @@
+<!--
+  ~ SPDX-FileCopyrightText:  Copyright Hewlett Packard Enterprise Development LP
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Viewer</title>
+    <style>
+        .tree-node {
+            margin-left: 20px;
+            margin-top: 6px;
+            margin-bottom: 6px;
+            padding: 5px;
+            border-left: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e00000;
+            cursor: pointer;
+        }
+
+        .annotation-node {
+            margin-left: 20px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .annotation-op {
+            font-style: italic;
+        }
+
+        /* for the div that holds text and a copy button.*/
+        .copy {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+        .copy-button {
+            background-color: whitesmoke;
+            color: #ffffff;
+            border: none;
+            padding: 1px 1px;
+            border-radius: 1px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 1px;
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+        .copy-button:hover {
+            background-color: #c5c5c5FF;
+        }
+
+        .acl-role {
+            color: #000000;
+        }
+
+        .deemphasize {
+            color: #c0c0c0;
+            padding: 0;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 20px;
+        }
+
+        button {
+            background-color: #00b388;
+            color: #ffffff;
+            border: none;
+            padding: 4px 9px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #008f6a;
+        }
+
+        .stack {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .headline {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 4em;
+            font-style: italic;
+            font-weight: bold;
+            color: #008f6a60;
+        }
+
+        .left, .right {
+            padding: 20px;
+            border-top: 1px solid #c4c3c3;
+            border-bottom: 1px solid #c4c3c3;
+        }
+
+        .left {
+            flex: 2;
+            flex-direction: column;
+        }
+
+        .right {
+            flex: 1;
+            border-left: 1px solid #c4c3c3;
+        }
+
+        .bottom {
+            padding: 20px;
+        }
+
+        .metadata {
+            #border-bottom: 1px solid #c4c3c3;
+            padding-bottom: 5px;
+        }
+
+        textarea {
+            width: 88%;
+            height: 120px;
+            margin-top: 5px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 1px;
+        }
+
+        .labelled-text {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        #credential {
+            height: 100px;
+        }
+
+        #user {
+            height: fit-content;
+        }
+
+        textarea {
+            width: 88%;
+            margin-top: 5px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: fit-content;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: none;
+            justify-content: left;
+            align-items: center;
+            text-align: left;
+            z-index: 1000;
+            border-radius: 10px;
+        }
+
+        .overlay-credential {
+            position: fixed;
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            width: 80%;
+            height: fit-content;
+            background-color: whitesmoke;
+            color: black;
+            display: none;
+            justify-content: left;
+            align-items: center;
+            text-align: left;
+            z-index: 1000;
+            border-radius: 10px;
+        }
+
+        .overlay-white {
+            width: 100%;
+            padding: 20px;
+            background-color: whitesmoke;
+            border-radius: 10px;
+        }
+
+        .delegate-button {
+            text-underline-style: single;
+            text-underline: #008f6a;
+        }
+
+        .overlay-content {
+            max-width: 80%;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 10px;
+        }
+
+        .close-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #555;
+
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close-button:hover {
+            background-color: #777;
+        }
+
+        .help-icon {
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-left: 5px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+<div class="stack">
+    <div class="headline">
+        Access Manager
+    </div>
+    <div class="container">
+        <div class="left">
+            <h2>Login<span class="help-icon" onclick="showOverlay('loginHelp')">[?]</span></h2>
+            <div>
+                <label class="label" for="credential">Credential</label>
+                <textarea id="credential" placeholder="Enter credential"></textarea>
+            </div>
+            <div>
+                <label class="label" for="user">Decoded ID</label>
+                <textarea id="user" readonly placeholder="User name will appear here"></textarea>
+                <button id="loadRoot">Load Root</button>
+            </div>
+        </div>
+        <div class="right">
+
+        </div>
+    </div>
+    <div class="bottom">
+        <h2>Explore<span class="help-icon" onclick="showOverlay('exploreHelp')">[?]</span></h2>
+        <div id="treeContainer"></div>
+    </div>
+</div>
+<!-- Overlay for help -->
+<div id="loginHelp" class="overlay">
+    <div class="overlay-content">
+        <p>Paste a credential here. If the identity is secured, then you will need
+            to get a credential from the access manager. This can be done by using
+            the id plugin example or, if the user has an ssh public key, then
+            you can ssh to the access manager and get a credential that way.</p>
+        <p>If the identity is not secured (has no VouchFor access control and no
+            ssh public key) then you can just enter the URL of the user or workload
+            as a valid credential. Such an unsecured identity is only used for demos
+            and would not be found in a production system.</p>
+        <button class="close-button" onclick="hideOverlay('loginHelp')">Close</button>
+    </div>
+</div>
+<div id="exploreHelp" class="overlay">
+    <div class="overlay-content">
+        <p>Once you press the "Load Root" button, this area will be populated with
+            metadata from the access manager. This information is displayed in the form
+            of directories that you can open by clicking on them. Each directory or
+            object in the system can have annotations which are shown when the object
+            is opened if they exist. There are three kinds of annotations: a) applied
+            roles, b) access controls, and c) user annotations. Applied roles are
+            only used on users and workloads. The most common use of user annotations
+            is for storing an ssh public key which can be used to authenticate a
+            credential request.</p>
+        <p>Note that different users can see different parts of the metadata on
+            the access manager. The user "am://user/the-operator" is the only user
+            who can manipulate the top-level directories ("am://", "am://data",
+            "am://role", "am://user", and "am://workload) and their content. For
+            the purposes of this demo, there is another special user called
+            "am://user/demo-god" who has the attribute "am://role/panopticon". All
+            metadata on the server is configured to allow a user with that attribute
+            to have "View" permission. This is useful during demos to show all of
+            the metdata that exists.</p>
+        <p>The identity plugin demonstration is configured allow the
+            "am://workload/yoyodyne/id-plugin" identity to vouch for all of the
+            Yoyodyne users. The plugin identity is not secured to simplify the flow
+            during demonstrations.</p>
+        <button class="close-button" onclick="hideOverlay('exploreHelp')">Close</button>
+    </div>
+</div>
+
+<div id="credentialDisplay" class="overlay-credential">
+    <div class="overlay-white">
+        <div class="labelled-text">
+            <label class="label" for="cred">Credential</label>
+            <div class="copy">
+                    <textarea id="cred" name="credential" readonly
+                              placeholder="Credential will appear here...">
+                    </textarea>
+                <button type="button" id="copyButton" class="copy-button">
+                    <img src="icons/copy.svg" alt="Copy credential" width="10px">
+                </button>
+            </div>
+        </div>
+        <div class="labelled-text">
+            <label class="label" for="plaincred">Decoded Form</label>
+            <textarea id="plaincred" name="plaintext" readonly placeholder="Plaintext version will appear here ...">
+            </textarea>
+        </div>
+        <button class="close-button" onclick="hideOverlay('credentialDisplay')">Close</button>
+    </div>
+</div>
+<script>
+    async function fetchDetails(path, credential) {
+        const response = await fetch(`/api/details?path=${encodeURIComponent(path)}&caller_id=${encodeURIComponent(credential)}`);
+        return response.json();
+    }
+
+    async function fetchDataCredential(path, credential) {
+        const response = await fetch(`/api/dataCredential?path=${encodeURIComponent(path)}&caller_id=${encodeURIComponent(credential)}`);
+        return response.text();
+    }
+
+    async function doublePasta(cred, elementId = 'user') {
+        if (cred.length < 10) {
+            return
+        }
+        if (cred.startsWith('am://')) {
+            document.getElementById(elementId).value = cred;
+        } else {
+            document.getElementById(elementId).value = parseJwt(cred).id;
+        }
+    }
+
+    document.getElementById('credential').addEventListener('paste', event => doublePasta(event.clipboardData.getData('text/plain')));
+    document.getElementById('credential').addEventListener('input', () => doublePasta(document.getElementById('credential').value));
+
+    function createTreeNode(node, credential) {
+        const container = document.createElement('div');
+        container.className = 'tree-node';
+
+        const label = document.createElement('div');
+
+        const head = document.createElement('span');
+        head.innerHTML = `<span>▸</span>${node} `;
+
+        const roles = document.createElement('span');
+        roles.innerHTML = `<span>▸</span>Roles `
+
+        const aces = document.createElement('span');
+        aces.innerHTML = `<span>▸</span>Access `
+
+        const annotations = document.createElement('span');
+        annotations.innerHTML = `<span>▸</span>Annotations `
+
+        const elements = [head, roles, aces, annotations];
+        elements.forEach((x) => label.appendChild(x))
+        container.appendChild(label);
+
+        sectionHandler(node, credential, container, roles, (container, data) => {
+            let haveContent = false;
+            if (data.details.roles && data.details.roles.length > 0) {
+                createRoleNode(container, "Roles: ", data.details.roles);
+                haveContent = true;
+            }
+            if (data.details.inheritedRoles && data.details.inheritedRoles.length > 0) {
+                createRoleNode(container, "Inherited roles: ", data.details.inheritedRoles);
+                haveContent = true;
+            }
+            return haveContent;
+        });
+
+        sectionHandler(node, credential, container, aces, (container, data) => {
+            let haveContent = false;
+            if (data.details.aces && data.details.aces.length > 0) {
+                createAceNode(container, "Access: ", data.details.aces);
+                haveContent = true;
+            }
+            if (data.details.inheritedAces && data.details.inheritedAces.length > 0) {
+                createAceNode(container, "Inherited access: ", data.details.inheritedAces);
+                haveContent = true;
+            }
+            return haveContent;
+        });
+
+        sectionHandler(node, credential, container, annotations, (container, data) => {
+            let haveContent = false;
+            if (data.details.annotations && data.details.annotations.length > 0) {
+                createAnnotationNode(container, "Annotations: ", data.details.annotations);
+                haveContent = true;
+            }
+            return haveContent;
+        });
+
+        sectionHandler(node, credential, container, head, (container, data) => {
+            let haveContent = false;
+            if (data.details.annotations && data.details.annotations.length > 0) {
+                createCredentialFetcher(container, "... Fetch credential", node, credential, data.details.annotations);
+                haveContent = true;
+            }
+            if (data.children && data.children.length > 0) {
+                (data.children || []).forEach(child => {
+                    container.appendChild(createTreeNode(child, credential));
+                });
+                haveContent = true;
+            }
+            return haveContent;
+        });
+
+        return container;
+    }
+
+    function sectionHandler(node, credential, container, head, contentFunction) {
+        let sectionOpen = false;
+        const sectionContainer = document.createElement('div');
+        sectionContainer.style.display = 'none'
+        sectionContainer.className = 'metadata';
+        container.appendChild(sectionContainer);
+
+        head.addEventListener('click', async () => {
+            if (!sectionOpen) {
+                const data = await fetchDetails(node, credential);
+                sectionContainer.innerHTML = '';
+                haveContent = contentFunction(sectionContainer, data);
+                if (haveContent) {
+                    sectionContainer.style.display = 'block';
+                    head.querySelector('span').textContent = '▾';
+                    sectionOpen = !sectionOpen;
+                } else {
+                    head.querySelector('span').textContent = '-';
+                }
+            } else {
+                sectionContainer.style.display = 'none';
+                head.querySelector('span').textContent = '▸';
+                sectionOpen = !sectionOpen;
+            }
+        });
+    }
+
+    function createCredentialFetcher(container, label, path, credential, annotations) {
+        annotations.forEach(annotation => {
+            if (annotation.tag == "data-info") {
+                b = document.createElement('div');
+                b.className = 'delegate-button';
+                b.innerHTML = `<span>${label}</span>`;
+                visible = false;
+                b.addEventListener('click', async () => {
+                    showOverlay('credentialDisplay')
+                    cred = await fetchDataCredential(path, credential);
+                    document.getElementById("cred").value = cred
+                    document.getElementById("plaincred").value = JSON.stringify(parseJwt(cred), null, 2);
+                    visible = true;
+                });
+                container.appendChild(b);
+            }
+        });
+    }
+
+    function createRoleNode(container, label, rx) {
+        if (rx.length > 0) {
+            const roles = document.createElement('div');
+            roles.className = 'annotation-node';
+            const content = document.createElement('div');
+            content.innerHTML = `<span>--</span>${label}<span class="acl-role">${(rx || []).map(x => deemphasize(x.role)).join(", ")}</span>`;
+            roles.appendChild(content);
+            container.appendChild(roles)
+        }
+    }
+
+    function createAceNode(container, label, ax) {
+        if (ax.length > 0) {
+            const aces = document.createElement('div');
+            aces.className = 'annotation-node';
+            const title = document.createElement('div');
+            title.innerHTML = `<span>--</span>${label}`
+            aces.appendChild(title);
+            ax.forEach(x => {
+                aceContainer = document.createElement('div');
+                aceContainer.className = 'annotation-node';
+                aceContainer.innerHTML = `....${aceAsString(x)}`;
+                aces.appendChild(aceContainer);
+            });
+            container.appendChild(aces);
+        }
+    }
+
+    function createAnnotationNode(container, label, rx) {
+        if (rx.length > 0) {
+            const annotations = document.createElement('div');
+            annotations.className = 'annotation-node';
+            const title = document.createElement('div');
+            title.innerHTML = `<span>--</span>${label}`
+            annotations.appendChild(title);
+            found = 0;
+            rx.forEach(x => {
+                if (x.tag != "principal" && x.tag != "role" && x.tag != "data") {
+                    found++;
+                    const annotationContainer = document.createElement('div');
+                    annotationContainer.className = 'annotation-node';
+                    annotationContainer.innerHTML = `....${x.tag} = ${x.data}`;
+                    annotations.appendChild(annotationContainer);
+                }
+            });
+            if (found > 0) {
+                container.appendChild(annotations)
+            }
+        }
+    }
+
+    function deemphasize(url) {
+        return url.replace(/am:\/\/role\//, `<span class='deemphasize'>am://role/</span>`);
+    }
+
+    function aceAsString(ace) {
+        const acls = ace.acls.map(acl => `<span class="acl-role">[${acl.roles.map(deemphasize).join(", ")}]</span>`);
+        const op = fancyCase(ace.op);
+        return `<span class="annotation-op">${op}</span>${ace.local ? " local" : ""} [ ${acls} ]`;
+    }
+
+    function fancyCase(op) {
+        if (op === "VIEW") {
+            return "View";
+        } else if (op === "ADMIN") {
+            return "Admin";
+        } else if (op === "READ") {
+            return "Read";
+        } else if (op === "WRITE") {
+            return "Write";
+        } else if (op === "APPLYROLE") {
+            return "ApplyRole";
+        } else if (op === "USEROLE") {
+            return "UseRole";
+        } else if (op === "VOUCHFOR") {
+            return "VouchFor";
+        }
+        return op;
+    }
+
+    document.getElementById('loadRoot').addEventListener('click', async () => {
+        const credential = document.getElementById('credential').value;
+        const treeContainer = document.getElementById('treeContainer');
+        const data = await fetchDetails('am://', credential);
+        treeContainer.innerHTML = '';
+        (data.children || []).forEach(async child => {
+            treeContainer.appendChild(createTreeNode(child, credential));
+        });
+    });
+
+    function parseJwt(token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    }
+
+    // Function to show the overlay
+    function showOverlay(id) {
+        document.getElementById(id).style.display = 'flex';
+    }
+
+    // Function to hide the overlay
+    function hideOverlay(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+</script>
+</body>
+</html>

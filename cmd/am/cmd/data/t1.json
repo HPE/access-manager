@@ -1,0 +1,26 @@
+{
+  "Details": {
+    "path": "am://user",
+    "roles": [],
+    "rolesVersion": "",
+    "inheritedRoles": [],
+    "aces": [
+      {
+        "op": "ADMIN",
+        "unique": "7898498",
+        "local": true,
+        "roles": [
+          {
+            "roles": [
+              "am://role/operator-admin"
+            ]
+          }
+        ]
+      }
+    ],
+    "acesVersion": "",
+    "inheritedAces": [],
+    "isDirectory": true
+  },
+  "Children": null
+}

@@ -1,0 +1,249 @@
+{
+  "path": "am://",
+  "meta": [
+    {
+      "tag": "ace",
+      "op": "ADMIN",
+      "local": true,
+      "acls": [
+        {
+          "roles": [
+            "am://role/operator-admin"
+          ]
+        }
+      ],
+      "unique": 305907834
+    },
+    {
+      "tag": "ace",
+      "op": "WRITE",
+      "local": true,
+      "acls": [
+        {
+          "roles": [
+            "am://role/operator-admin"
+          ]
+        }
+      ],
+      "unique": 561343784
+    }
+  ],
+  "children": [
+    {
+      "path": "am://data",
+      "meta": [
+        {
+          "tag": "ace",
+          "op": "ADMIN",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "ace",
+          "op": "WRITE",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": "am://role",
+      "meta": [
+        {
+          "tag": "ace",
+          "op": "ADMIN",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "ace",
+          "op": "WRITE",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "path": "am://role/operator-admin",
+          "meta": [
+            {
+              "tag": "role"
+            },
+            {
+              "tag": "ace",
+              "op": "USEROLE",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "APPLYROLE",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "path": "am://user",
+      "meta": [
+        {
+          "tag": "ace",
+          "op": "ADMIN",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "ace",
+          "op": "WRITE",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "path": "am://user/the-operator",
+          "meta": [
+            {
+              "tag": "principal"
+            },
+            {
+              "tag": "applied-role",
+              "role": "am://role/operator-admin"
+            },
+            {
+              "tag": "ace",
+              "op": "ADMIN",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "VIEW",
+              "local": false,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "ace",
+              "op": "WRITE",
+              "local": true,
+              "acls": [
+                {
+                  "roles": [
+                    "am://role/operator-admin"
+                  ]
+                }
+              ]
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "path": "am://workload",
+      "meta": [
+        {
+          "tag": "ace",
+          "op": "ADMIN",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "ace",
+          "op": "WRITE",
+          "local": true,
+          "acls": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": []
+    }
+  ]
+}

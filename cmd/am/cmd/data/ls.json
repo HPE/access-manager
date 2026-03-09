@@ -1,0 +1,99 @@
+{
+  "details": {
+    "path": "am://user",
+    "roles": [],
+    "inheritedRoles": [],
+    "aces": [
+      {
+        "op": "ADMIN",
+        "unique": "7898498",
+        "local": true,
+        "version": "0",
+        "expiry": "0",
+        "permissions": [
+          {
+            "roles": [
+              "am://role/operator-admin"
+            ]
+          }
+        ]
+      }
+    ],
+    "inheritedAces": [],
+    "isDirectory": true
+  },
+  "children": [
+    {
+      "path": "am://user/hpe",
+      "roles": [
+        {
+          "key": "am://user/hpe",
+          "version": "3",
+          "role": "am://role/hpe/hpe-user",
+          "expiry": "0"
+        }
+      ],
+      "inheritedRoles": [],
+      "aces": [
+        {
+          "op": "ADMIN",
+          "unique": "98637987",
+          "local": true,
+          "version": "0",
+          "expiry": "0",
+          "permissions": [
+            {
+              "roles": [
+                "am://role/hpe/hpe-admin"
+              ]
+            }
+          ]
+        },
+        {
+          "op": "VIEW",
+          "unique": "79234067",
+          "local": false,
+          "version": "0",
+          "expiry": "0",
+          "permissions": [
+            {
+              "roles": [
+                "am://role/hpe/hpe-user"
+              ]
+            }
+          ]
+        }
+      ],
+      "inheritedAces": [],
+      "isDirectory": true
+    },
+    {
+      "path": "am://user/small",
+      "roles": [],
+      "inheritedRoles": [],
+      "aces": [
+        {
+          "op": "ADMIN",
+          "unique": "4209299640134658087",
+          "local": false,
+          "version": "2",
+          "expiry": "0",
+          "permissions": [
+            {
+              "roles": [
+                "am://role/operator-admin"
+              ]
+            }
+          ]
+        }
+      ],
+      "inheritedAces": [],
+      "isDirectory": true
+    }
+  ],
+  "error": {
+    "error": 0,
+    "message": "",
+    "global": "0"
+  }
+}

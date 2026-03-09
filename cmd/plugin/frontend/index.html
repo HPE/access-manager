@@ -1,0 +1,354 @@
+<!--
+  ~ SPDX-FileCopyrightText:  Copyright Hewlett Packard Enterprise Development LP
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugin Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 20px;
+        }
+
+        button {
+            background-color: #00b388;
+            color: #ffffff;
+            border: none;
+            padding: 4px 9px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #008f6a;
+        }
+
+        button:hover {
+            background-color: #008f6a;
+        }
+
+        .stack {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .copy {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+        .headline {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 4em;
+            font-style: italic;
+            font-weight: bold;
+            color: #008f6a60;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 1px;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .left, .right {
+            padding: 20px;
+            border-top: 1px solid #c4c3c3;
+            border-bottom: 1px solid #c4c3c3;
+        }
+
+        .left {
+            flex: 2;
+        }
+
+        .right {
+            flex: 1;
+            border-left: 1px solid #c4c3c3;
+        }
+
+        .copy-button {
+            background-color: #ffffff;
+            color: #ffffff;
+            border: none;
+            padding: 1px 1px;
+            border-radius: 1px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 1px;
+            width: 10%;
+        }
+
+        .copy-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        textarea {
+            width: 88%;
+            height: 100px;
+            margin-top: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        a {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: fit-content;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: none;
+            justify-content: left;
+            align-items: center;
+            text-align: left;
+            z-index: 1000;
+        }
+
+        .overlay-content {
+            max-width: 80%;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 10px;
+        }
+
+        .close-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #555;
+
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close-button:hover {
+            background-color: #777;
+        }
+
+        .help-icon {
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-left: 5px;
+            color: gray;
+        }
+
+        .labelled-text {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="stack">
+    <div class="headline">
+        Yoyodyne Auth Demo
+    </div>
+    <div class="container">
+        <div class="left">
+            <h2>Login<span class="help-icon" onclick="showOverlay('loginHelp')">[?]</span></h2>
+            <form id="loginForm">
+                <label for="username">User Name:</label><br>
+                <input type="text" id="username" name="username"><br><br>
+                <label for="password">Password:</label><br>
+                <input type="password" id="password" name="password"><br><br>
+                <button type="button" id="loginButton">Login</button>
+            </form>
+            <br>
+            <div class="labelled-text">
+                <label class="label" for="credential">Credential</label>
+                <div class="copy">
+                    <textarea id="credential" readonly placeholder="Credential will appear here..."></textarea>
+                    <button type="button" id="copyButton" class="copy-button">
+                        <!--suppress HtmlUnknownTarget -->
+                        <img src="icons/copy.svg" alt="Copy login" width="10px">
+                    </button>
+                </div>
+            </div>
+            <div class="labelled-text">
+                <label class="label" for="plaintext">Decoded Form</label>
+                <textarea id="plaintext" readonly placeholder="Plaintext version will appear here ..."></textarea>
+            </div>
+        </div>
+        <div class="right">
+            <h2>Sample Users<span class="help-icon" onclick="showOverlay('sampleUsersHelp')">[?]</span></h2>
+            <ul>
+                {{range .}}
+                <li>{{.Name}}: {{.Password}}
+                    <button type="button" onclick='fill("{{.Name}}", "{{.Password}}")'>Fill</button>
+                </li>
+                {{end}}
+            </ul>
+        </div>
+    </div>
+    <div class="auth">
+        <h2>Plugin Authentication<span class="help-icon" onclick="showOverlay('pluginAuthHelp')">[?]</span></h2>
+        <p>This plugin needs to prove its own identity. The identity <a
+                onclick='pluginId("am://workload/yoyodyne/id-plugin")'><em>am://workload/yoyodyne/id-plugin</em></a>
+            is
+            set up for this in the demo universe with no credentials required. If you add an ssh-pubkey annotation
+            on that workload, you will need to get a credential via ssh and put it here.</p>
+        <p>An interesting experiment is to change the plugin's identity to
+            <a onclick='pluginId("am://user/the-operator")'><em>am://user/the-operator</em></a>.
+            This identity does not have the attributes necessary to vouch for yoyodyne users so the
+            login will fail even though this is a valid identity.</p>
+        <div class="labelled-text">
+            <label class="label" for="plugin-cred">Credential for plugin to use</label>
+            <textarea id="plugin-cred">am://workload/yoyodyne/id-plugin</textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Overlays -->
+<div id="loginHelp" class="overlay">
+    <div class="overlay-content">
+        <p>You can enter a username and password here. Clicking on the "Login" button will cause this
+            plugin to validate they username and password against the sample users on the right. If this
+            passes, then the plugin will contact the access manager to get a credential for the user.
+        </p>
+        <p>Getting the credential will only succeed if the plugin credential below is valid and
+            the plugin identity has permission to vouch for the user in question.
+        </p>
+        <p>Note that the access manager knows nothing about how the plugin decides whether
+            it should vouch for some user. The plugin knows and that is sufficient. All the access
+            manager knows is that there is a URL for each identity. There might even be multiple
+            plugins that can vouch for the same access manager identity. That makes migration
+            between identity management systems much easier.</p>
+        <button class="close-button" onclick="hideOverlay('loginHelp')">Close</button>
+    </div>
+</div>
+<div id="sampleUsersHelp" class="overlay">
+    <div class="overlay-content">
+        <p>This is a list of the users that this demo plugin will accept. Obviously, in a real
+            system, the users would be managed with a real identity management system like
+            Active Directory or LDAP and the authentication would be more advanced than
+            fixed passwords.</p>
+        <p>Clicking on the "Fill" button to the right of each long will fill in the username
+            and password fields with the corresponding values.</p>
+        <button class="close-button" onclick="hideOverlay('sampleUsersHelp')">Close</button>
+    </div>
+</div>
+<div id="pluginAuthHelp" class="overlay">
+    <div class="overlay-content">
+        <p>Here you can insert a credential for the plugin itself. As the demo universe
+            is set up, the plugin identity is not secured so we can just insert the URL
+            for the identity directly. If we secure the identity by, for instance, adding
+            an ssh public key as an annotation, then we would have to put a full access
+            manager credential here instead of just a URL.</p>
+        <p>You can also experiment with putting other identities in here such as the
+            system operator identity. Since the system operator has no visibility into the
+            Yoyodyne user directory (under <em>am://user/yoyodyne</em>) login operations
+            with the plugin using that identity will fail. This illustrates how different
+            organizations with different identity authentication can share a single access
+            manager.</p>
+        <button class="close-button" onclick="hideOverlay('pluginAuthHelp')">Close</button>
+    </div>
+</div>
+
+<script>
+    function copyCredential() {
+        const cred = document.getElementById("credential")
+        const credential = cred.value;
+        navigator.clipboard.writeText(credential)
+            .then(() => {
+                const oldBg = cred.style.backgroundColor;
+                cred.style.backgroundColor = "#00b38840";
+                setTimeout(() => {
+                    cred.style.backgroundColor = oldBg;
+                }, 250);
+            })
+            .catch(err => {
+                alert("Failed to copy: " + err);
+            });
+    }
+
+    // Function to show the overlay
+    function showOverlay(id) {
+        document.getElementById(id).style.display = 'flex';
+    }
+
+    // Function to hide the overlay
+    function hideOverlay(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function pluginId(id) {
+        document.getElementById("plugin-cred").value = id;
+    }
+
+    function fill(name, password) {
+        document.getElementById("username").value = name.toLowerCase();
+        document.getElementById("password").value = password;
+    }
+
+    document.getElementById('copyButton').addEventListener('click', copyCredential);
+
+    document.getElementById('loginButton').addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "user": document.getElementById("username").value,
+                    "password": document.getElementById("password").value,
+                    "caller_id": document.getElementById("plugin-cred").value
+                }),
+            });
+
+            if (response.ok) {
+                const credential = await response.text();
+                document.getElementById("credential").value = credential;
+                document.getElementById("plaintext").value = JSON.stringify(parseJwt(credential), null, 2);
+            } else {
+                document.getElementById("credential").value = 'Login failed: ' + await response.text();
+            }
+        } catch (error) {
+            document.getElementById("credential").value = 'Login failed: ' + error.message;
+        }
+    });
+
+    function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
+</script>
+</body>
+</html>

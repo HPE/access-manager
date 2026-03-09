@@ -1,0 +1,64 @@
+[
+  {
+    "path": "am://user/hpe",
+    "roles": [
+      {
+        "role": "am://role/hpe/hpe-user"
+      }
+    ],
+    "rolesVersion": "",
+    "inheritedRoles": [],
+    "aces": [
+      {
+        "op": "ADMIN",
+        "unique": "98637987",
+        "local": true,
+        "permissions": [
+          {
+            "roles": [
+              "am://role/hpe/hpe-admin"
+            ]
+          }
+        ]
+      },
+      {
+        "op": "VIEW",
+        "unique": "79234067",
+        "local": false,
+        "permissions": [
+          {
+            "roles": [
+              "am://role/hpe/hpe-user"
+            ]
+          }
+        ]
+      }
+    ],
+    "acesVersion": "",
+    "inheritedAces": [],
+    "isDirectory": true
+  },
+  {
+    "path": "am://user/small",
+    "roles": [],
+    "rolesVersion": "",
+    "inheritedRoles": [],
+    "aces": [
+      {
+        "op": "ADMIN",
+        "unique": "4209299640134658087",
+        "local": false,
+        "permissions": [
+          {
+            "roles": [
+              "am://role/operator-admin"
+            ]
+          }
+        ]
+      }
+    ],
+    "acesVersion": "",
+    "inheritedAces": [],
+    "isDirectory": true
+  }
+]
