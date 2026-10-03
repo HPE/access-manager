@@ -143,7 +143,7 @@ func SampleMetaTree(base string) (*MetaTree, error) {
 // in the form of a line from the `authorized_keys` file for ssh. This is used during
 // the bootstrapping of a secure universe.
 func (m *MetaTree) InjectOperatorPublicKey(sshPublicKey []byte) error {
-	op, err := m.GetPath("am:/user/the-operator")
+	op, err := m.GetPath("am://user/the-operator")
 	if err != nil {
 		return err
 	}

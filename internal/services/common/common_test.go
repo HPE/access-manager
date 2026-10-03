@@ -64,10 +64,10 @@ func TestPathComponents(t *testing.T) {
 		expected []int
 		bits     []string
 	}{
-		{"am://abc/def/g", []int{6, 9, 13, 15}, []string{"am://", "am://abc", "am://abc/def", "am://abc/def/g"}},
-		{"am://abc", []int{6, 9}, []string{"am://", "am://abc"}},
-		{"am://abc/", []int{6, 9}, []string{"am://", "am://abc"}},
-		{"am://", []int{6}, []string{"am://"}},
+		{"am://abc/def/g", []int{5, 8, 12, 14}, []string{"am://", "am://abc", "am://abc/def", "am://abc/def/g"}},
+		{"am://abc", []int{5, 8}, []string{"am://", "am://abc"}},
+		{"am://abc/", []int{5, 8}, []string{"am://", "am://abc"}},
+		{"am://", []int{5}, []string{"am://"}},
 		{"not-a-valid-path", []int{}, []string{}},
 	}
 
