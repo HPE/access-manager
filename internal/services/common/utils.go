@@ -49,12 +49,12 @@ func Cleanup(a string) string {
 PathComponents returns an array of indexes for all proper component prefixes of a URI omitting the
 standard lead-in.
 
-For a URI of "am://abc/def/g", this will give back [6, 9, 13, 15].
+For a URI of "am://abc/def/g", this will give back [5, 8, 12, 14].
 ```
-"am://abc/def/g"[0:6] = "am://"
-"am://abc/def/g"[0:9] = "am://abc"
-"am://abc/def/g"[0:13] = "am://abc/def"
-"am://abc/def/g"[0:15] = "am://abc/def/g"
+"am://abc/def/g"[0:5] = "am://"
+"am://abc/def/g"[0:8] = "am://abc"
+"am://abc/def/g"[0:12] = "am://abc/def"
+"am://abc/def/g"[0:14] = "am://abc/def/g"
 ```
 */
 func PathComponents(path string) []int {
